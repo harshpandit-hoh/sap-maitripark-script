@@ -1,0 +1,178 @@
+const fs = require("fs");
+
+const mapper = {
+  "RS.0215.100.01": "Professional Fees",
+  "RS.0215.100.02": "Common Infra Works",
+  // "RS.0215.100.03": "Civil & Structural Works",
+  "RS.0215.100.03.01": "Shore Piling & Excavation",
+  "RS.0215.100.03.02": "Shore Piling & Excavation",
+  "RS.0215.100.03.03": "Shore Piling & Excavation",
+  "RS.0215.100.03.04": "Civil & Structural Works",
+  "RS.0215.100.03.05": "Civil & Structural Works",
+  "RS.0215.100.03.06": "Civil & Structural Works",
+  "RS.0215.100.03.07": "Civil & Structural Works",
+  "RS.0215.100.03.08": "Civil & Structural Works",
+  "RS.0215.100.03.10": "Civil & Structural Works",
+  "RS.0215.100.03.11": "Civil & Structural Works",
+  "RS.0215.100.03.12": "Civil & Structural Works",
+  "RS.0215.100.03.13": "Civil & Structural Works",
+  "RS.0215.100.03.14": "Civil & Structural Works",
+  "RS.0215.100.03.15": "Civil & Structural Works",
+  // "RS.0215.100.04": "Finishing Works",
+  "RS.0215.100.04.01": "Civil & Structural Works",
+  "RS.0215.100.04.02": "Finishing Works",
+  "RS.0215.100.04.03": "Finishing Works",
+  "RS.0215.100.04.04": "Addon Cost",
+  "RS.0215.100.04.05": "Aluminium Works",
+  "RS.0215.100.04.06": "Finishing Works",
+  "RS.0215.100.04.07": "Finishing Works",
+  "RS.0215.100.04.08": "Finishing Works",
+  "RS.0215.100.04.09": "Finishing Works",
+  "RS.0215.100.04.10": "Finishing Works",
+  "RS.0215.100.04.11": "Addon Cost",
+  "RS.0215.100.04.12": "Finishing Works",
+  // "RS.0215.100.05": "MEP including Elevators",
+  "RS.0215.100.05.01": "MEP including Elevators",
+  "RS.0215.100.05.02": "MEP including Elevators",
+  "RS.0215.100.05.03": "MEP including Elevators",
+  "RS.0215.100.05.04": "MEP including Elevators",
+  "RS.0215.100.05.05": "MEP including Elevators",
+  "RS.0215.100.05.06": "MEP including Elevators",
+  "RS.0215.100.05.07": "MEP including Elevators",
+  // "OT.0059.03.02": "Common Infra Works",
+  // "OT.0059.03.02.01": "Common Infra Works",
+  "OT.0059.03.02.01.01": "Common Infra Works",
+  "OT.0059.03.02.01.02": "Common Infra Works",
+  "OT.0059.03.02.01.03": "Common Infra Works",
+  "OT.0059.03.02.01.04": "Common Infra Works",
+  "OT.0059.03.02.01.05": "Common Infra Works",
+  "OT.0059.03.02.01.06": "Common Infra Works",
+  "OT.0059.03.02.01.07": "Common Infra Works",
+  "OT.0059.03.02.01.08": "Common Infra Works",
+  "OT.0059.03.02.02": "Common Infra Works",
+  "OT.0059.03.02.03": "Common Infra Works",
+  "IF.0090.02.01.01": "Common Infra Works",
+  // "IF.0090.02.01.02": "Common Infra Works",
+  "IF.0090.02.01.02.01": "Common Infra Works",
+  "IF.0090.02.01.04": "Common Infra Works",
+  "IF.0090.02.01.05": "Common Infra Works",
+  "IF.0090.02.01.06": "Shore Piling & Excavation",
+  // "IF.0090.02.04": "Professional Fees",
+  "IF.0090.02.04.01": "Professional Fees",
+  "IF.0090.02.04.02": "Professional Fees",
+  "IF.0090.02.04.03": "Professional Fees",
+  "IF.0090.02.04.04": "Professional Fees",
+  "IF.0090.02.04.05": "Professional Fees",
+  // "IF.0090.02.05": "Common Infra Works",
+  "IF.0090.02.05.01": "Common Infra Works",
+  "IF.0090.02.05.02": "Common Infra Works",
+  // "IF.0090.02.05.03": "Common Infra Works",
+  "IF.0090.02.05.03.01": "Common Infra Works",
+  "IF.0090.02.05.03.02": "Common Infra Works",
+  "IF.0090.02.06": "Common Infra Works",
+  "IF.0090.02.07": "Common Infra Works",
+  "IF.0090.02.08": "Safety",
+  "RS.0214.100": "Professional Fees",
+  "RS.0214.101": "Common Infra Works",
+  // "RS.0214.102": "Civil & Structural Works",
+  // "RS.0214.102.01": "Shore Piling & Excavation",
+  "RS.0214.102.01.01": "Shore Piling & Excavation",
+  "RS.0214.102.01.02": "Shore Piling & Excavation",
+  "RS.0214.102.02": "Shore Piling & Excavation",
+  "RS.0214.102.03": "Shore Piling & Excavation",
+  "RS.0214.102.04": "Civil & Structural Works",
+  "RS.0214.102.05": "Civil & Structural Works",
+  "RS.0214.102.06": "Civil & Structural Works",
+  "RS.0214.102.07": "Civil & Structural Works",
+  "RS.0214.102.08": "Civil & Structural Works",
+  "RS.0214.102.09": "Aluminium Works",
+  "RS.0214.102.10": "Civil & Structural Works",
+  "RS.0214.102.11": "Civil & Structural Works",
+  "RS.0214.102.12": "Civil & Structural Works",
+  "RS.0214.102.13": "Civil & Structural Works",
+  "RS.0214.102.14": "Civil & Structural Works",
+  "RS.0214.102.15": "Civil & Structural Works",
+  "RS.0214.102.16": "Shore Piling & Excavation",
+  "RS.0214.102.17": "Escalation",
+  // "RS.0214.103": "Finishing Works",
+  "RS.0214.103.01": "Civil & Structural Works",
+  "RS.0214.103.02": "Finishing Works",
+  "RS.0214.103.03": "Finishing Works",
+  "RS.0214.103.04": "Addon Cost",
+  "RS.0214.103.05": "Aluminium Works",
+  "RS.0214.103.06": "Finishing Works",
+  "RS.0214.103.07": "Finishing Works",
+  "RS.0214.103.08": "Finishing Works",
+  "RS.0214.103.09": "Finishing Works",
+  "RS.0214.103.10": "Finishing Works",
+  // "RS.0214.104": "MEP including Elevators",
+  "RS.0214.104.01": "MEP including Elevators",
+  "RS.0214.104.02": "MEP including Elevators",
+  "RS.0214.104.03": "MEP including Elevators",
+  "RS.0214.104.04": "MEP including Elevators",
+  "RS.0214.104.05": "MEP including Elevators",
+  "RS.0214.104.06": "MEP including Elevators",
+  "RS.0214.104.07": "MEP including Elevators",
+  "RS.0214.104.08": "MEP including Elevators",
+  "RS.0214.104.09": "MEP including Elevators",
+  "RS.0214.104.10": "Civil & Structural Works",
+  "RS.0214.104.11": "MEP including Elevators",
+  "RS.0214.104.12": "MEP including Elevators",
+  "RS.0214.104.13": "Parking System",
+  "RS.0214.104.14": "MEP including Elevators",
+  // "RS.0214.105": "Contingency",
+  // "RS.0214.106": "Professional Fees",
+  "RS.0214.106.01": "Professional Fees",
+  "RS.0214.106.02": "Professional Fees",
+  "RS.0214.106.03": "Professional Fees",
+  "RS.0214.106.04": "Professional Fees",
+  // "RS.0214.107": "Common Infra Works",
+  "RS.0214.107.01": "Common Infra Works",
+  // "RS.0214.108": "Common Infra Works",
+  "RS.0214.108.01": "Common Infra Works",
+  "RS.0214.108.02": "Common Infra Works",
+  "RS.0214.108.03": "Common Infra Works",
+  "RS.0214.109": "Common Infra Works",
+  // "RS.0214.110": "Common Infra Works",
+  "RS.0214.110.02": "Finishing Works",
+};
+
+const inputFile = "input.csv";
+const outputFile = "output.csv";
+
+try {
+  // Read the CSV file synchronously
+  const data = fs.readFileSync(inputFile, "utf8");
+
+  // Split the file data into an array of lines, handling both \r\n and \n
+  const lines = data.split(/\r?\n/);
+
+  // Process each line
+  const updatedLines = lines.map((line, index) => {
+    // Skip completely empty lines
+    if (!line.trim()) return line;
+
+    // Split the line into an array of columns using commas
+    const columns = line.split(",");
+
+    // The header line (index 0)
+    if (index === 0) {
+      // The second column in your CSV snippet is empty (,,) - let's name it Description
+      columns[1] = "Description";
+    } else {
+      const wbsElement = columns[0];
+      // Check the mapper for the description. If found, add it. If not, leave it empty.
+      columns[1] = mapper[wbsElement] ? mapper[wbsElement] : "";
+    }
+
+    // Join the columns back together into a single comma-separated string
+    return columns.join(",");
+  });
+
+  // Write the updated data to a new CSV file
+  fs.writeFileSync(outputFile, updatedLines.join("\n"), "utf8");
+
+  console.log(`Success! File saved as: ${outputFile}`);
+} catch (err) {
+  console.error("An error occurred processing the CSV file:", err);
+}
