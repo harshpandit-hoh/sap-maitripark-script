@@ -1,19 +1,19 @@
-Category,Total Budget (Rs. Cr),Total Commitment(Rs. Cr),Total Assigned(Rs. Cr),Total Budget Avail(Rs. Cr)
-"Civil & Structural Works",21.88,13.05,14.62,11.45
-"Shore Piling & Excavation",0.75,0.75,0.75,45.05
-"Finishing Works",0.02,0.02,0.02,0.00
-"Aluminium Works",0.00,0.00,0.00,0.00
-"MEP including Elevators",0.07,0.07,0.07,0.46
-"Parking System",0.00,0.00,0.00,0.00
-"Addon Cost",0.00,0.00,0.00,0.00
-"Professional Fees",0.00,0.00,0.00,0.00
-"Common Infra Works",0.00,0.00,0.00,0.00
-"IGBC related cost",0.00,0.00,0.00,0.00
-"Safety @ 0.5 %",0.00,0.00,0.00,0.00
-"Sub total",22.71,13.89,15.45,56.95
-" ", , , , 
-"Contingency @ 2.5%",0.57,0.35,0.39,1.42
-" ", , , , 
-"Escalation @ 10%",2.27,1.39,1.54,5.70
-" ", , , , 
-"Grand Total",25.55,15.62,17.38,64.07
+Category,Total Budget (Rs. Cr),Total Commitment(Rs. Cr),Total Assigned(Rs. Cr),Total Budget Avail(Rs. Cr),WBS Descriptions
+"Civil & Structural Works",447.08,365.28,365.56,81.52,"DOWEL ANCHORS, CONCRETE WORK, REINFORCEMENT WORK, CONVENTIONAL SHUTTER, MASONARY WORKS, PLASTER WORKS - INTE, PLASTER WORKS - EXTE, GVP WORK, MISC WORK, WATERPROOFING WORK"
+"Shore Piling & Excavation",61.25,26.04,47.39,13.86,"EXCAVATION / BACKFIL, EXCAVATION WORKS, ROYALTY CHARGES, PEST CONTROL, SHORE PILING WORKS, EARTHWORKS"
+"Finishing Works",5.85,0.31,0.31,5.53,"FLOORING WORK / TREM, ELEVATION FEATURE WO"
+"Aluminium Works",0.00,0.00,0.00,0.00,""
+"MEP including Elevators",0.89,0.89,0.89,0.00,"ELECTRICAL WORK"
+"Parking System",0.00,0.00,0.00,0.00,""
+"Addon Cost",0.00,0.00,0.00,0.00,""
+"Professional Fees",15.95,1.90,4.12,11.83,"RCC CONSULTANT, SERVICE CONSULTANT, OTHER CONSULTANT, ARCHITECTURAL CONSUL"
+"Common Infra Works",23.29,2.16,21.40,1.89,"CIVIL SERVICES WORKS, FENCING WORK, SITE MOBILIZATION, SOIL INVESTIGATION W, TEMPORARY CONSTRUCTI, WATER CHARGES, ELECTRICITY POWER CH, DEPARTMENTAL WORK, MISC STRUCTURES, ELECTRICAL WORK, PLUMBING & SANITATIO, RAIN WATER HARVESTIN, SOLAR HOT WATER SYST, FIRE FIGHTING WORKS, FAPA / CCTV, DG SET WORKS, MECHANICAL, STP, GENERAL CONSULTING S"
+"IGBC related cost",0.00,0.00,0.00,0.00,""
+"Safety @ 0.5 %",0.00,0.00,0.00,0.00,""
+"Sub total",554.31,396.59,439.67,114.64,""
+" ", , , , ,""
+"Contingency @ 2.5%",13.86,9.91,10.99,2.87,""
+" ", , , , ,""
+"Escalation @ 10%",55.43,39.66,43.97,11.46,""
+" ", , , , ,""
+"Grand Total",623.60,446.16,494.63,128.97,""

@@ -24,13 +24,13 @@ try {
   const data = fs.readFileSync(inputFile, "utf8");
   const lines = data.split(/\r?\n/);
 
-  // Column indexes from CSV
-  // Adjust these if your CSV structure changes
-const DESCRIPTION_INDEX = 1;
-const COC_INDEX = 2;
-const COMMITMENT_INDEX = 4;
-const ASSIGNED_INDEX = 5;
-const BUDGET_AVAIL_INDEX = 6;
+  // Column indexes from CSV (Adjusted for your input.csv layout)
+  const DESCRIPTION_INDEX = 1; // Mapped Category
+  const WBS_DESC_INDEX = 2;    // WBS Description from input.csv
+  const COC_INDEX = 3;         // Budget 
+  const COMMITMENT_INDEX = 5;  // Commitment
+  const ASSIGNED_INDEX = 6;    // Assigned
+  const BUDGET_AVAIL_INDEX = 7;// Budget Avail
 
   // Initialize sums object
   const sums = {};
@@ -41,6 +41,7 @@ const BUDGET_AVAIL_INDEX = 6;
       commitment: 0,
       assigned: 0,
       budgetAvail: 0,
+      wbsDescriptions: new Set(), // Set will automatically handle unique values
     };
   });
 
@@ -52,24 +53,28 @@ const BUDGET_AVAIL_INDEX = 6;
 
     const columns = line.split(",");
 
-    const description = columns[DESCRIPTION_INDEX]
+    const category = columns[DESCRIPTION_INDEX]
       ? columns[DESCRIPTION_INDEX].trim()
       : "";
 
-    if (!sums.hasOwnProperty(description)) continue;
+    if (!sums.hasOwnProperty(category)) continue;
 
-    sums[description].coc += parseFloat(columns[COC_INDEX]) || 0;
-    sums[description].commitment +=
-      parseFloat(columns[COMMITMENT_INDEX]) || 0;
-    sums[description].assigned +=
-      parseFloat(columns[ASSIGNED_INDEX]) || 0;
-    sums[description].budgetAvail +=
-      parseFloat(columns[BUDGET_AVAIL_INDEX]) || 0;
+    // Collect the WBS description
+    const wbsDesc = columns[WBS_DESC_INDEX] ? columns[WBS_DESC_INDEX].trim() : "";
+    if (wbsDesc) {
+      sums[category].wbsDescriptions.add(wbsDesc);
+    }
+
+    // Add totals
+    sums[category].coc += parseFloat(columns[COC_INDEX]) || 0;
+    sums[category].commitment += parseFloat(columns[COMMITMENT_INDEX]) || 0;
+    sums[category].assigned += parseFloat(columns[ASSIGNED_INDEX]) || 0;
+    sums[category].budgetAvail += parseFloat(columns[BUDGET_AVAIL_INDEX]) || 0;
   }
 
-  // Output header
+  // Output header - Included 'WBS Descriptions'
   const finalLines = [
-    "Category,Total Budget (Rs. Cr),Total Commitment(Rs. Cr),Total Assigned(Rs. Cr),Total Budget Avail(Rs. Cr)",
+    "Category,Total Budget (Rs. Cr),Total Commitment(Rs. Cr),Total Assigned(Rs. Cr),Total Budget Avail(Rs. Cr),WBS Descriptions",
   ];
 
   // Totals
@@ -94,27 +99,22 @@ const BUDGET_AVAIL_INDEX = 6;
     subTotal.commitment += commitment;
     subTotal.assigned += assigned;
     subTotal.budgetAvail += budgetAvail;
+    
+    // Join unique WBS descriptions with a comma
+    const wbsDescList = Array.from(sums[cat].wbsDescriptions).join(", ");
 
     finalLines.push(
-      `"${cat}",${coc.toFixed(2)},${commitment.toFixed(
-        2
-      )},${assigned.toFixed(2)},${budgetAvail.toFixed(2)}`
+      `"${cat}",${coc.toFixed(2)},${commitment.toFixed(2)},${assigned.toFixed(2)},${budgetAvail.toFixed(2)},"${wbsDescList}"`
     );
   });
 
   // Sub Total row
   finalLines.push(
-    `"Sub total",${subTotal.coc.toFixed(
-      2
-    )},${subTotal.commitment.toFixed(
-      2
-    )},${subTotal.assigned.toFixed(
-      2
-    )},${subTotal.budgetAvail.toFixed(2)}`
+    `"Sub total",${subTotal.coc.toFixed(2)},${subTotal.commitment.toFixed(2)},${subTotal.assigned.toFixed(2)},${subTotal.budgetAvail.toFixed(2)},""`
   );
 
   // Spacer
-  finalLines.push(`" ", , , , `);
+  finalLines.push(`" ", , , , ,""`);
 
   // Contingency (2.5%)
   const contingency = {
@@ -125,17 +125,11 @@ const BUDGET_AVAIL_INDEX = 6;
   };
 
   finalLines.push(
-    `"Contingency @ 2.5%",${contingency.coc.toFixed(
-      2
-    )},${contingency.commitment.toFixed(
-      2
-    )},${contingency.assigned.toFixed(
-      2
-    )},${contingency.budgetAvail.toFixed(2)}`
+    `"Contingency @ 2.5%",${contingency.coc.toFixed(2)},${contingency.commitment.toFixed(2)},${contingency.assigned.toFixed(2)},${contingency.budgetAvail.toFixed(2)},""`
   );
 
   // Spacer
-  finalLines.push(`" ", , , , `);
+  finalLines.push(`" ", , , , ,""`);
 
   // Escalation (10%)
   const escalation = {
@@ -146,41 +140,24 @@ const BUDGET_AVAIL_INDEX = 6;
   };
 
   finalLines.push(
-    `"Escalation @ 10%",${escalation.coc.toFixed(
-      2
-    )},${escalation.commitment.toFixed(
-      2
-    )},${escalation.assigned.toFixed(
-      2
-    )},${escalation.budgetAvail.toFixed(2)}`
+    `"Escalation @ 10%",${escalation.coc.toFixed(2)},${escalation.commitment.toFixed(2)},${escalation.assigned.toFixed(2)},${escalation.budgetAvail.toFixed(2)},""`
   );
 
   // Spacer
-  finalLines.push(`" ", , , , `);
+  finalLines.push(`" ", , , , ,""`);
 
   // Grand Total
   const grandTotal = {
     coc: subTotal.coc + contingency.coc + escalation.coc,
     commitment:
-      subTotal.commitment +
-      contingency.commitment +
-      escalation.commitment,
-    assigned:
-      subTotal.assigned + contingency.assigned + escalation.assigned,
+      subTotal.commitment + contingency.commitment + escalation.commitment,
+    assigned: subTotal.assigned + contingency.assigned + escalation.assigned,
     budgetAvail:
-      subTotal.budgetAvail +
-      contingency.budgetAvail +
-      escalation.budgetAvail,
+      subTotal.budgetAvail + contingency.budgetAvail + escalation.budgetAvail,
   };
 
   finalLines.push(
-    `"Grand Total",${grandTotal.coc.toFixed(
-      2
-    )},${grandTotal.commitment.toFixed(
-      2
-    )},${grandTotal.assigned.toFixed(
-      2
-    )},${grandTotal.budgetAvail.toFixed(2)}`
+    `"Grand Total",${grandTotal.coc.toFixed(2)},${grandTotal.commitment.toFixed(2)},${grandTotal.assigned.toFixed(2)},${grandTotal.budgetAvail.toFixed(2)},""`
   );
 
   // Save file
